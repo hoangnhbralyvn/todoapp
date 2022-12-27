@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/todoListFragment"
-        android:name="com.example.todoapp.view.TodoListFragment"
-        android:label="fragment_todo_list"
+        android:name="com.example.todoapp.view.fragment.TodoListFragment"
+        android:label="Todo List"
         tools:layout="@layout/fragment_todo_list" >
         <action
             android:id="@+id/action_todoListFragment_to_createTodoFragment"
@@ -16,7 +16,27 @@
     </fragment>
     <fragment
         android:id="@+id/createTodoFragment"
-        android:name="com.example.todoapp.view.CreateTodoFragment"
-        android:label="fragment_create_todo"
-        tools:layout="@layout/fragment_create_todo" />
+        android:name="com.example.todoapp.view.fragment.CreateTodoFragment"
+        android:label="Create Todo"
+        tools:layout="@layout/fragment_create_todo" >
+        <action
+            android:id="@+id/action_createTodoFragment_to_succeedFragment"
+            app:destination="@id/succeedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/succeedFragment"
+        android:name="com.example.todoapp.view.fragment.SucceedFragment"
+        android:label="Succeed"
+        tools:layout="@layout/fragment_succeed">
+        <action
+            android:id="@+id/action_succeedFragment_to_todoListFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/todoListFragment"
+            app:destination="@id/todoListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/statistics"
+        android:name="com.example.todoapp.view.fragment.StatisticsFragment"
+        android:label="Statistics"
+        tools:layout="@layout/fragment_statistics" />
 </navigation>
