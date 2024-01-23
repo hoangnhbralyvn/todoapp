@@ -7,9 +7,11 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.todoapp.model.Task
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
+import kotlin.coroutines.Continuation
 
 @Dao
 interface TaskDao {
@@ -17,8 +19,17 @@ interface TaskDao {
     @Query("SELECT * FROM task")
     fun getAllTasks(): Observable<List<Task>>
 
+    @Query("SELECT * FROM task")
+    suspend fun getAllTasks2(): List<Task>
+
+    @Query("SELECT * FROM task")
+    fun getAllTasks3(): Flow<List<Task>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTask(task: Task): Single<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTask2(task: Task): Long
 
     @Update
     fun updateTask(task: Task): Completable

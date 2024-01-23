@@ -9,7 +9,13 @@ class TaskRepository(
 
     fun getAllTasks() = taskDao.getAllTasks()
 
+    suspend fun getAllTasks2() = taskDao.getAllTasks2()
+
+    fun getAllTasks3() = taskDao.getAllTasks3()
+
     fun createTask(task: Task) = taskDao.insertTask(task)
+
+    suspend fun createTask2(task: Task) = taskDao.insertTask2(task)
 
     fun updateTask(task: Task) = taskDao.updateTask(task)
 

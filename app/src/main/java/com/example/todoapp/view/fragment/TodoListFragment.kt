@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.databinding.FragmentTodoListBinding
 import com.example.todoapp.model.Task
 import com.example.todoapp.view.adapter.TaskAdapter
 import com.example.todoapp.viewmodel.AppViewModelFactory
 import com.example.todoapp.viewmodel.TaskListViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class TodoListFragment : Fragment(), View.OnClickListener {
 
@@ -34,19 +38,26 @@ class TodoListFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initView() {
-        viewModel.getTaskList()
         binding.rvTasks.adapter = adapter
         binding.fabAdd.setOnClickListener(this)
     }
 
     private fun initObserver() {
-        viewModel.tasks.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                binding.rvTasks.visibility = View.GONE
-                binding.tvEmptyMsg.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.todoFlow.collectLatest {
+                drawList(it)
             }
-            adapter.submitList(it)
         }
+        viewModel.tasks.observe(viewLifecycleOwner) {
+            drawList(it)
+        }
+    }
+
+    private fun drawList(list: List<Task>) {
+        val isEmpty = list.isEmpty()
+        binding.rvTasks.isVisible = !isEmpty
+        binding.tvEmptyMsg.isVisible = isEmpty
+        adapter.submitList(list)
     }
 
     private fun onTaskClick(task: Task) {

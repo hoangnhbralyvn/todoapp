@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.databinding.FragmentCreateTodoBinding
 import com.example.todoapp.model.Task
 import com.example.todoapp.viewmodel.AppViewModelFactory
 import com.example.todoapp.viewmodel.CreateTaskViewModel
+import kotlinx.coroutines.launch
 
 class CreateTodoFragment : Fragment(), View.OnClickListener {
 
@@ -36,6 +38,16 @@ class CreateTodoFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initObserver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.createSuccess.collect {
+                binding.tvError.visibility = View.GONE
+                binding.edtTitle.text.clear()
+                binding.edtDescription.text.clear()
+                findNavController().navigate(
+                    CreateTodoFragmentDirections.actionCreateTodoFragmentToSucceedFragment()
+                )
+            }
+        }
         viewModel.isCreateSucceed.observe(viewLifecycleOwner) {
             binding.tvError.visibility = View.GONE
             binding.edtTitle.text.clear()
@@ -61,6 +73,6 @@ class CreateTodoFragment : Fragment(), View.OnClickListener {
             return
         }
         val task = Task(title = title, description = description, checked = false)
-        viewModel.createNewTask(task)
+        viewModel.createNewTask2(task)
     }
 }
